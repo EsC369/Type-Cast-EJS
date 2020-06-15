@@ -38,6 +38,10 @@ const UserSchema = new Schema({
     country: {
         type: String,
     },
+    fbLogin: {
+        type: Boolean,
+        default: false
+    },
     register_date: {
         type: Date,
         default: Date.now

@@ -10,6 +10,9 @@ const { check, validationResult } = require('express-validator');
 const nodemailer = require("nodemailer");
 const ObjectId = require('mongodb').ObjectID;
 const webpush = require("web-push")
+const passport = require("passport");
+const dotenv = require("dotenv")
+const strategy = require("passport-facebook")
 
 //REGEX:
 const regexThree = /^\d{5}(?:[-\s]\d{4})?$/
@@ -57,6 +60,48 @@ function checkFileType(file, cb){
     cb('Images Only!');
   }
 }
+
+//----------------- facebook login Left off On reversing user info for input and output
+// @route POST /facebook-login
+// @desc  Login With Facebook API
+
+// const FacebookStrategy = strategy.Strategy;
+
+// dotenv.config();
+// passport.serializeUser(function(user, done) {
+//   done(null, user);
+// });
+
+// passport.deserializeUser(function(obj, done) {
+//   done(null, obj);
+// });
+
+// passport.use(
+//   new FacebookStrategy(
+//     {
+//       clientID: process.env.FACEBOOK_CLIENT_ID,
+//       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+//       callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+//       profileFields: ["email", "name"]
+//     },
+//     function(accessToken, refreshToken, profile, done) {
+//       const { email, first_name, last_name } = profile._json;
+//       const userData = {
+//         email,
+//         firstName: first_name,
+//         lastName: last_name
+//       };
+//       new userModel(userData).save();
+//       done(null, profile);
+//     }
+//   )
+// );
+// //--------------------
+
+
+
+
+
 
 // @route POST /upload
 // @desc  Uploads image to server/local-storage
@@ -435,8 +480,7 @@ router.post("/register", (req, res) => {
           zipcode,
           nickname,
           phone,
-          gender
-          ,
+          gender,
           country,
           password,
           img: "../uploads/default-photo.jpg"
@@ -458,7 +502,7 @@ router.post("/register", (req, res) => {
             console.log("success")
             // Add Into Session:
             req.session.user_id = newUser._id;
-            sendEmail(email)
+            sendEmail(email, name)
             // req.flash("error", "Please Check Your Email From Typecast!")
             // res.render("success", {user: newUser, msg: 'Account Created! Please Check Your Email!'});
             res.render("profile", {user: newUser, msg: 'Account Created! Please Check Your Email!'});
@@ -470,7 +514,7 @@ router.post("/register", (req, res) => {
 });
 
 // Helper function to send email to users:
-function sendEmail(email){
+function sendEmail(email, name){
   console.log(`Sending Email To ${email}...`)
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -484,34 +528,45 @@ function sendEmail(email){
   // try{
       
       // Email template:
-    const output = `<table cellspacing="0" cellpadding="0" border="0" style="color:#333;background:#fff;padding:0;margin:0;width:100%;font:15px/1.25em 'Helvetica Neue',Arial,Helvetica"> <tbody><tr width="100%"> <td valign="top" align="left" style="background:#eef0f1;font:15px/1.25em 'Helvetica Neue',Arial,Helvetica"> <table style="border:none;padding:0 18px;margin:50px auto;width:500px"> <tbody> <tr width="100%" height="60"> <td valign="top" align="left" style="border-top-left-radius:4px;border-top-right-radius:4px;background:#27709b url("/images/typecast-logo-solo.png" title="Trello" style="font-weight:bold;font-size:18px;color:#fff;vertical-align:top" class="CToWUd"> </td> </tr> <tr width="100%"> <td valign="top" align="left" style="background:#fff;padding:18px">
+    // const output = `<table cellspacing="0" cellpadding="0" border="0" style="color:#333;background:#fff;padding:0;margin:0;width:100%;font:15px/1.25em 'Helvetica Neue',Arial,Helvetica"> <tbody><tr width="100%"> <td valign="top" align="left" style="background:#eef0f1;font:15px/1.25em 'Helvetica Neue',Arial,Helvetica"> <table style="border:none;padding:0 18px;margin:50px auto;width:500px"> <tbody> <tr width="100%" height="60"> <td valign="top" align="left" style="border-top-left-radius:4px;border-top-right-radius:4px;background:#27709b url("/images/typecast-logo-solo.png" title="Trello" style="font-weight:bold;font-size:18px;color:#fff;vertical-align:top" class="CToWUd"> </td> </tr> <tr width="100%"> <td valign="top" align="left" style="background:#fff;padding:18px">
 
-    <h1 style="font-size:20px;margin:16px 0;color:#333;text-align:center"> Let's collaborate! </h1>
+    // <h1 style="font-size:20px;margin:16px 0;color:#333;text-align:center"> Let's collaborate! </h1>
     
-    <p style="font:15px/1.25em 'Helvetica Neue',Arial,Helvetica;color:#333;text-align:center"> You are invited to the TypeCast Group: </p>
-    <p style="font:15px/1.25em 'Helvetica Neue',Arial,Helvetica;color:#333;text-align:center"> Thank you for registering! Your typecasting awaits! </p>
+    // <p style="font:15px/1.25em 'Helvetica Neue',Arial,Helvetica;color:#333;text-align:center"> You are invited to the TypeCast Group: </p>
+    // <p style="font:15px/1.25em 'Helvetica Neue',Arial,Helvetica;color:#333;text-align:center"> Thank you for registering! Your typecasting awaits! </p>
     
-    <div style="background:#f6f7f8;border-radius:3px"> <br>
+    // <div style="background:#f6f7f8;border-radius:3px"> <br>
     
-    <p style="text-align:center"> <a href="#" style="color:#306f9c;font:26px/1.25em 'Helvetica Neue',Arial,Helvetica;text-decoration:none;font-weight:bold" target="_blank">Typecast.Life</a> </p>
+    // <p style="text-align:center"> <a href="#" style="color:#306f9c;font:26px/1.25em 'Helvetica Neue',Arial,Helvetica;text-decoration:none;font-weight:bold" target="_blank">Typecast.Life</a> </p>
     
-    <p style="font:15px/1.25em 'Helvetica Neue',Arial,Helvetica;margin-bottom:0;text-align:center"> <a href="#" style="border-radius:3px;background:#3aa54c;color:#fff;display:block;font-weight:700;font-size:16px;line-height:1.25em;margin:24px auto 6px;padding:10px 18px;text-decoration:none;width:180px" target="_blank"> See the organization</a> </p>
+    // <p style="font:15px/1.25em 'Helvetica Neue',Arial,Helvetica;margin-bottom:0;text-align:center"> <a href="#" style="border-radius:3px;background:#3aa54c;color:#fff;display:block;font-weight:700;font-size:16px;line-height:1.25em;margin:24px auto 6px;padding:10px 18px;text-decoration:none;width:180px" target="_blank"> See the organization</a> </p>
     
-    <br><br> </div>
+    // <br><br> </div>
     
-    <p style="font:14px/1.25em 'Helvetica Neue',Arial,Helvetica;color:#333"> <strong>What's Typecast?</strong> It's the easiest way to find out what others perceive of you! <a href="https://type-cast.herokuapp.com/about-page" style="color:#306f9c;text-decoration:none;font-weight:bold" target="_blank">Learn more »</a> </p>
+    // <p style="font:14px/1.25em 'Helvetica Neue',Arial,Helvetica;color:#333"> <strong>What's Typecast?</strong> It's the easiest way to find out what others perceive of you! <a href="https://type-cast.herokuapp.com/about-page" style="color:#306f9c;text-decoration:none;font-weight:bold" target="_blank">Learn more »</a> </p>
     
-    </td>
+    // </td>
     
-    </tr>
+    // </tr>
     
-    </tbody> </table> </td> </tr></tbody> </table>`;
+    // </tbody> </table> </td> </tr></tbody> </table>`;
+
+    var output = `Welcome to TypeCast.Life, ${name}!
+
+    Let's get started! Head to https://www.typecast.life and update your profile. Once that's out of the way, feel free to select a few sample questions as a challenge to other users. It will be fun!
+    
+    As a reward for pre-registering on the site before the launch, you have been awarded 12 credits towards Premium membership. Check back often to discover new ways to earn more credits!
+    
+    Sincerely,
+    The TypeCast.Life team
+    
+    P.S. This is automated email. Please do not reply to this message`;
 
     var mailOptions = {
-      from: '"TypeCast "<no-Reply@gmail.com>', // sender address
+      from: '"TypeCast.Life! "<no-Reply@gmail.com>', // sender address
       to: `${email}`, // list of receivers
-      subject: "Hello ✔ WELCOME TO TYPECAST!",
-      html: output
+      subject: "Hello ✔ WELCOME TO TYPECAST.LIFE!",
+      text: output
   };
 
   // Send email and handle response:
