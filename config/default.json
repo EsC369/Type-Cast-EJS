@@ -1,0 +1,6 @@
+  { 
+    "mongoURI": "mongodb+srv://typecast1:typecast1234@typecast-cluster-9lnm9.mongodb.net/test?retryWrites=true&w=majority",
+    "sessionSecret": "TypeCast1337",
+    "email": "typecast1337@gmail.com",
+    "password": "typecast1234$"
+  }

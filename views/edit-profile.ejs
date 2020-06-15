@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>TypeCast Welcome</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <style>
+    .serif {
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    .avatar {
+      vertical-align: middle;
+      width: 20%;
+      height: auto;
+      border-radius: 5%;
+    }
+
+    select{
+      text-align-last:center;
+      padding-right: 29px;
+      direction: rtl;
+  }
+    
+  .entry-img{
+    background-image: url("images/default-photo.jpg");
+    background-position: center;
+    width: 350px;
+    background-size: cover;
+    height: 270px;
+    border-radius: 10%;
+  }
+  .btn-responsive-two{
+    width:10%;
+    height:40px;
+  }
+  .responsive-form{
+    width:50%;
+  }
+
+  @media screen and (max-width: 778px) {
+    .btn-responsive-two{
+      width:30%;
+      height:40px;
+    }
+    .avatar {
+      vertical-align: middle;
+      width: 80%;
+      height: auto;
+      border-radius: 5%;
+    }
+    .responsive-form{
+      width:80%;
+    }
+  }  
+  </style>
+</head>
+
+<body>
+  <%- include('partials/navbar') %>
+  <% JSON.stringify(messages) %>
+  <% if(messages.error) { %>
+  <div class="alert alert-danger">
+    <% for (var x of messages.error) { %>
+    <h6 align="center" style="color:red;"><%= x %></h6>
+  </div>
+  <% } %>
+  <% } %>
+  <center>
+    <div class="alert alert-success" role="alert">
+      <%= typeof msg != 'undefined' ? msg : '' %>
+    </div>
+  </center>
+  <!-- End Flash messages -->
+  <center>
+    <div class="container" style="padding-bottom:20px;">
+      <form action="/profile-page" method="GET" >
+        <button class="btn btn-success my-2 my-sm-0" type="submit">Go Back</button>
+      </form>
+    </div>
+    <h3 class="omb_authTitle">Edit Profile</h3>
+    <hr>
+    
+    <p>Click Picture To Edit</p>
+      
+      <!-- <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input id="myImage" name="myImage" type="file" style="display: none;">
+        <input type="image" src="<%= user.img != 'undefined' ? user.img : '' %>" width="30px" onclick="document.getElementById('myImage').click();">
+        <br>
+        <button style="width:100%;height:40px;width:5%;" class="btn btn-md btn-info" type="submit" class="btn">Submit</button>
+      </form> -->
+      <center>
+        <div class="container"><img src="<%= user.img != 'undefined' ? user.img : '' %>" class="img-fluid img-responsive avatar responsive" alt="Avatar">
+      
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+          <input id="fileUpload" name="myImage" type="file">
+          <br>
+          <button class="btn-responsive-two btn btn-info d-flex justify-content-center d-md-table mx-auto" type="submit" class="btn">Submit</button>
+        </form>
+      </div>
+    </center>
+      <br>
+      <br>  
+      <div class="border responsive-form">
+        <hr class="omb_hrOr">
+        <div style="margin:0 auto">
+            <div style="margin:0 auto">
+                
+                <form class="omb_loginForm" action="/update-profile" autocomplete="off" method="POST">
+                    <div class="input-group" style="padding-bottom:10px;">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input style="text-align: center;" type="text" class="form-control" name="name" placeholder="Real Name, Invisible">
+                    </div>
+
+                    <div class="input-group" style="padding-bottom:10px;">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input style="text-align: center;" type="text" class="form-control" name="nickname" placeholder="Nickname, Visible">
+                    </div>
+
+                  <!-- <div class="input-group" style="padding-bottom:10px;">
+                      <select class="form-control" name="gender" id="gender" placeholder="Prefered Gender">
+                          <option style="text-align: center;" value="default">Prefered Gender</option>
+                          <option style="text-align: center;" value="Male">Male</option>
+                          <option style="text-align: center;" value="Female">Female</option>
+                      </select>
+                  </div>
+
+                  <div class="input-group" style="padding-bottom:10px;">
+                    <select class="form-control" name="country" id="country" placeholder="Select Country">
+                        <option style="text-align: center;" value="default">Select Country</option>
+                        <option style="text-align: center;" value="USA">U.S.A</option>
+                    </select>
+                  </div> -->
+
+                  <div class="input-group" style="padding-bottom:10px;">
+                      <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                      <input style="text-align: center;" type="text" class="form-control" name="zipcode" placeholder="US Zipcode">
+                  </div>
+
+                  <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                      
+                  </div>
+                  <br>
+                  <div class="container" stlye="padding-bottom:5%;">
+                    <div style="width:30%;">
+                      <button class="btn btn-lg btn-success" type="submit">Update</button>
+                    </div>
+                  </div>
+                  <br>
+                  <!-- <button style="margin-bottom:5px;" class="btn btn-lg btn-primary btn-block" type="submit">Update</button> -->
+          
+              </form>
+          </div>
+      </div>
+
+    
+  </center>
+  <%- include('partials/footer') %>
+</body>
+
+</html>

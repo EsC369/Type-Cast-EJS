@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Site Designer 4.0.3265">
+  <title>TypeCast Home</title>
+  <link rel="stylesheet" href="css/bootstrap4.min.css">
+  <link rel="stylesheet" href="css/wireframe-theme.min.css">
+  <script>document.createElement( "picture" );</script>
+  <script class="picturefill" async="async" src="js/picturefill.min.js"></script>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:b%7CRoboto:300,900">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+    
+</head>
+
+<body>
+  <!-- Navbar -->
+  <%- include('partials/navbar') %>
+  <!-- <nav class="container-grid nav-region">
+    <div class="container-grid nav-bar">
+      <a class="link-text text-link-1" href="/">TypeCast.Life!<br>
+      </a><span class="glyph font-icon-2"><i class="coffeecup-icons-menu3"></i></span>
+    </div>
+  </nav> -->
+  <!-- End of navbar -->
+
+    <div class="container">
+        <% JSON.stringify(messages) %>
+        <% if(messages.error) { %>
+          <div class="alert alert-danger">
+          <% for (var x of messages.error) { %>
+            <h6 align="center" style="color:red;"><%= x %></h6>
+          </div>
+          <% } %>
+        <% } %>
+  <div class="container-grid">
+    <h1>Whdo <span class="heading-text-1">W<span>ho do <span class="heading-text-2"><span class="heading-text-3">They</span><span class="heading-text-4"> t</span></span>hink You are?</span>
+      </span>a</h1>
+  </div>
+  <div class="container-grid sd-three-cols">
+    <div class="container-grid"></div>
+    <div class="container-grid">
+      <p class="paragraph paragraph-1"><span class="paragraph-text-2"><span class="paragraph-text-2" id="paragraph-text-1"><span class="paragraph-text-3">Typecast </span>"Who do they think you are"? is a worldwide sociology experiment. It is an attempt at causing a fundamental change in the way every human being treats every other human being. It is an attempt to get every man, woman and child to realize that every other man, woman and child deserves the benefit of the doubt that they are a good human being. Too many times we lose out on the opportunity of making friends, business, partners and even life partners, because we let our past dictate how we judged somebody now.<br><br>Join The Experiment <span class="paragraph-text-4">today</span>! Curious to see what people think of you? Find out what YOUR typecast is! <a href="/about-page"><span class="paragraph-text-5">LEARN MORE</span></a></span>
+        </span>
+      </p>
+      <div class="container-grid"></div>
+    </div>
+    <div class="container-grid"></div>
+  </div>
+  <div class="container-grid">
+    <div class="container-grid sd-three-cols">
+      <p class="paragraph"></p><a class="link-button button-link-1" href="/login-page">Existing Users, Log In<br></a>
+    </div>
+  </div>
+  <div class="container-grid">
+    <div class="container-grid sd-three-cols">
+      <div class="container-grid"></div>
+      <h1 class="heading-2"><span class="heading-text-5">For a limited time, new users will receive free credits toward their<br>Premium Membership. Registration is free, no credit card required!</span>
+      </h1>
+      <div class="container-grid"></div>
+    </div>
+  </div>
+  <div class="container-grid"></div>
+  <div class="container-grid sd-three-cols">
+    <div class="container-grid container-2">
+      <form action="/register" method="POST" class="form-container form-container-1">
+        <input style="text-align:center;" value="" name="name" type="text" placeholder="Name" class="input-1" title="Name" required="required">
+        <input style="text-align:center;" value="" name="email" type="text" placeholder="Email" class="input-2" title="Email" required="required">
+        <input style="text-align:center;" value="" name="password" type="text" placeholder="Password" class="input-3" title="Password" required="required"><button type="submit" style="margin-top:15px;background-color:#f06615" class="link-button btn" href="/register">Sign up with Email</button><button type="button" class="btn">Sign&nbsp;up&nbsp;with&nbsp;Facebook</button><button type="button" class="btn">Sign&nbsp;up&nbsp;with&nbsp;Google</button>
+      </form>
+  </div>
+    <div class="container-grid"></div>
+  </div>
+  <div class="container-grid"></div>
+  <!-- <div class="container-grid">
+    <div class="container-grid container-3">
+      <div class="container-grid sd-two-cols">
+        <div class="container-grid">
+          <p class="paragraph paragraph-3">(C) 2020 TypeCast.Life!</p>
+        </div>
+        <div class="container-grid">
+          <p class="paragraph paragraph-3">Contact Us</p>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <%- include('partials/footer') %>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/outofview.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+</body>
+
+</html>
