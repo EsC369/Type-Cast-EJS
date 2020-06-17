@@ -13,7 +13,7 @@ const UserSchema = new Schema({
         unique: true
     },
     zipcode: {
-        type: String,
+        type: String
     },
     img: { 
         type: String
@@ -23,24 +23,29 @@ const UserSchema = new Schema({
         default: true
     },
     phone: {
-        type: String,
+        type: String
     },
     nickname: {
-        type: String,
+        type: String
     },
     gender: {
-        type: String,
+        type: String
     },
     password: {
-        type: String,
-        require: true
+        type: String
     },
     country: {
-        type: String,
+        type: String
     },
-    fbLogin: {
+    fb_login: {
         type: Boolean,
         default: false
+    },
+    fb_id: {
+        type: String
+    },
+    premium_credits: {
+        type: String
     },
     register_date: {
         type: Date,

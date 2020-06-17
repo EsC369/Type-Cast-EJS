@@ -13,6 +13,7 @@ const webpush = require("web-push")
 const passport = require("passport");
 const dotenv = require("dotenv")
 const strategy = require("passport-facebook")
+const LocalStorage = require('node-localstorage').LocalStorage;
 
 //REGEX:
 const regexThree = /^\d{5}(?:[-\s]\d{4})?$/
@@ -24,6 +25,8 @@ const emailREGEX = new RegExp(regex)
 const phoneREGEX = new RegExp(regexFivePhone)
 const zipREGEX = new RegExp(regexThree)
 const maxSize = 1 * 1024 * 1024; // for 1MB 
+
+var desiredSaves = [];
 
 // Image Uploading Middlewares:
 // Set The Storage Engine
@@ -61,42 +64,145 @@ function checkFileType(file, cb){
   }
 }
 
+router.post("/facebook", (req, res) => {
+  res.redirect("/auth/facebook");
+})
+
+router.get("/facebook-email", (req, res) => {
+  res.render("fb-email");
+})
 //----------------- facebook login Left off On reversing user info for input and output
 // @route POST /facebook-login
 // @desc  Login With Facebook API
+router.post("/facebook-login", (req, res) => {
+  const { emailFB, emailFB2 } = req.body;
 
-// const FacebookStrategy = strategy.Strategy;
+  if(!emailFB || emailFB === ""){
+    console.log("Blank Email")
+    req.flash("error", "For FB Login, We Only Require Your Email...");
+    res.redirect("/register-page");
+  }else if(!emailREGEX.test(emailFB)){
+    console.log("Invalid Email")
+    req.flash("error", "Please Enter A Valid Email");
+    res.redirect("/facebook-email");
+  }else if(emailFB !== emailFB2){
+    console.log("Email Mismatch")
+    req.flash("error", "Emails Didn't Match!");
+    res.redirect("/facebook-email");
+  }else{
+    let lowerEmail = emailFB.toLowerCase()
+    console.log("email lower case", lowerEmail)
 
-// dotenv.config();
-// passport.serializeUser(function(user, done) {
-//   done(null, user);
-// });
+    console.log("Desired Saves So far: ", desiredSaves)
+    let name = desiredSaves[0].firstName + " " + desiredSaves[0].lastName;
+    let fb_id = desiredSaves[0].fb_id;
+    // console.log("name, email, fb_id: ", name, email, fb_id)
+    // Check for existing user:
+    User.findOne({ email: lowerEmail })
+    .then(user => {
+      if (user) {
+        console.log("User Already Exists!")
+        req.flash("error", "User Already Exists!")
+        return res.redirect("/");
+      }
+      const newUser = new User({
+        name,
+        premium: true,
+        email: lowerEmail,
+        fb_login: true,
+        fb_id:  fb_id,
+        img: "../uploads/default-photo.jpg"
+      })
 
-// passport.deserializeUser(function(obj, done) {
-//   done(null, obj);
-// });
+      console.log("TEST HERE FACEBOOK LOGIN NEW USER CREATION: ", newUser)
+      
+      newUser.save((err) => {
+        if (err) {
+          console.log("User Already Exists!")
+          req.flash("error", "User Already Exists")
+          return res.redirect("/");
+        }
+      });
+          console.log("success")
+          // Add Into Session:
+          req.session.user_id = newUser._id;
+          sendEmail(lowerEmail, name)
+          // req.flash("error", "Please Check Your Email From Typecast!")
+          // res.render("success", {user: newUser, msg: 'Account Created! Please Check Your Email!'});
+          res.render("profile", {user: newUser, msg: 'Account Created! Please Check Your Email!'}); 
+    });
+  }
+});
 
-// passport.use(
-//   new FacebookStrategy(
-//     {
-//       clientID: process.env.FACEBOOK_CLIENT_ID,
-//       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-//       callbackURL: process.env.FACEBOOK_CALLBACK_URL,
-//       profileFields: ["email", "name"]
-//     },
-//     function(accessToken, refreshToken, profile, done) {
-//       const { email, first_name, last_name } = profile._json;
-//       const userData = {
-//         email,
-//         firstName: first_name,
-//         lastName: last_name
-//       };
-//       new userModel(userData).save();
-//       done(null, profile);
-//     }
-//   )
-// );
-// //--------------------
+
+
+
+
+
+
+const FacebookStrategy = strategy.Strategy;
+
+dotenv.config();
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+      profileFields: ["email", "name"]
+    },
+    function(accessToken, refreshToken, profile, done) {
+      const { id, first_name, last_name } = profile._json;
+      const userData = {
+        fb_id: id,
+        firstName: first_name,
+        lastName: last_name
+      };
+      desiredSaves.length = 0;
+      console.log("Desired Saves Array Should Be Empty: ", desiredSaves)
+      desiredSaves.push(userData);
+      console.log("New Desired Saves: facebook User data: ", desiredSaves)
+      done(null, profile);
+    }));
+
+router.get("/auth/facebook", passport.authenticate("facebook"));
+
+router.get(
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", {
+    successRedirect: "/fb-email",
+    failureRedirect: "/fail"
+  })
+);
+
+//  LEFT OFF HERE WHERE ABOUT TO IMPLEMENT NEW PAGE FOR after succesfull facebook login. Then request email from user, 
+// then CREATE NEW USER AND WHATNOT FROM NE WPOAT ROUTE WITH FACEBOOK CREDENTIALS. REMOVE CURRENT FUNCTIONALITY
+// AND VALIDATIONS OF SIGN UP WITH FACEBOOK FORM/BUTTON. WHEN YOU CLIKC fb BUTTON, MAKE IT AUTOMATICALLY
+// GO TO THE FB LOGIN EXTERNALLY. ONCE ITS SUCCESSFUL, THEN ASK FOR EMAIL TO CONCLUDE THE USER MODEL SAVE.
+
+router.get("/fail", (req, res) => {
+  // res.send("Failed attempt");
+  console.log("Failed To Login With facebook")
+  req.flash("error", "Failed To Login With Facebook!")
+  req.redirect("/register-page")
+});
+
+router.get("/fb-email", (req, res) => {
+  console.log("FB-login Successful, requesting email from user...")
+  res.render("fb-email")
+});
+
+// router.post("/fb-success", (req, res) => {
+  
+// End of Facebook Routes: //--------------------
 
 
 

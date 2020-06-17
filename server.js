@@ -7,7 +7,10 @@ const Routes = require("./routes/api/routes");
 const User = require("./models/User");
 const port = process.env.PORT || 5000;
 const path = require("path");
+const passport = require("passport");
 
+// Passport Middleware:
+app.use(passport.initialize());
 
 // Db Config:
 // const db = config.get("mongoURI");

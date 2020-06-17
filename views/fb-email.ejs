@@ -130,57 +130,37 @@
           <% } %>
         <% } %>
 
-        <%- include('partials/info-message') %>
-        <div style="text-align:center;">
-            <a href="/login-page">Existing Users, Login</a>
-        </div>
-          <br>
-          <div class="container" style="text-align: center;">
-            <p style="color:red;">For a limited time, new users will receive free credits toward their</p>
-            <p style="color:red;"> Premium Membership. Registration is free, no credit card required!</p>
-        </div>
+        <br>
         <div class="border responsive-form">
-            <h3 class="omb_authTitle">Signup</h3>
+            <h3 class="omb_authTitle">Facebook Login</h3>
 
             <hr class="omb_hrOr">
 
             <div style="margin:0 auto">
                 <div style="margin:0 auto">
-                    <form class="omb_loginForm" action="/register" autocomplete="off" method="POST">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                            <input style="text-align: center;" type="text" class="form-control" name="name" placeholder="Name">
-                            <!-- <input style="text-align: center;" type="text" class="form-control" name="phone" placeholder="Phone Number"> -->
-                            <!-- <input style="text-align: center;" type="text" class="form-control" name="zipcode" placeholder="Zip Code"> -->
-                            
-                        </div>
-                        
+                    <form class="omb_loginForm" action="/facebook-login" autocomplete="off" method="POST">
+                        <p style="color:red;">Please Enter Your Facebook Email For our Records. </p>
+                        <p style="color:red;">It is important that you enter it correctly to ensure you recive our emails! </p>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
                             <!-- <input style="text-align: center;" type="text" class="form-control" name="nickname" placeholder="Nickname"> -->
-                            <input style="text-align: center;" type="text" class="form-control" name="email" placeholder="Email Address">
-
-                        </div>
-                        <div class="input-group">
-                            <input style="text-align: center;" type="password" class="form-control" name="password" placeholder="Password">
+                            <input style="text-align: center;" type="text" class="form-control" name="emailFB" placeholder="Email Address">
                         </div>
 
                         <div class="input-group">
-                            <input style="text-align: center;" type="password" class="form-control" name="password2" placeholder="Re-type Password">
+                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                            <input style="text-align: center;" type="text" class="form-control" name="emailFB2" placeholder="Re-type Email Address">
                         </div>
 
                         <span class="help-block"></span>
 
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                            
                         </div>
                         <br>
                         
-                        <button style="margin-bottom:20px;font-size:15px;" class="btn btn-lg btn-primary btn-block" type="submit" name="emailLog" value="emailLog">Sign Up With Email</button>
-            
                         <div style="padding-right:auto">
-                        <button style="margin-bottom:10px;font-size:15px;" class="btn btn-lg btn-secondary btn-block" type="submit" name="fbLog" value="fbLog" formaction="/facebook">Sign Up With Facebook</button>
+                        <button style="margin-bottom:10px;font-size:15px;" class="btn btn-lg btn-secondary btn-block" type="submit" name="fbLogTwo" value="fbLogValTwo">Login With Facebook</button>
                             <!-- <a style="margin-bottom:10px;color:white;" class="btn-lg btn-secondary btn-block">
                                 <i class="fa fa-facebook visible-xs"></i>
                                 <span class="hidden-xs" style="font-size:15px;">Sign Up With Facebook</span>
